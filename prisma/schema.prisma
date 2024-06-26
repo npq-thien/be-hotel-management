@@ -13,7 +13,145 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Employee {
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
+  username             String    @unique
+  password             String
+  fullname             String
+  email                String    @unique
+  phone                String
+  role                 Role      @default(RECEPTIONIST)
+  bookingConfirmations Booking[]
+}
+
 model User {
-  id String @id @default(uuid()) @map("_id") @db.ObjectId
-  name String
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  username       String          @unique
+  password       String
+  fullname       String
+  email          String          @unique
+  phone          String?
+  // for user
+  roomReviews    RoomReview[]
+  serviceReviews ServiceReview[]
+  bookings       Booking[]
+}
+
+model Room {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  // room id là gì ? VD single_1, double_2, deluxe_4....
+  roomId       String        @unique
+  // nên để roomtypeId hay typeName vì typeName cũng unique
+  roomType     RoomType      @relation(fields: [roomTypeId], references: [id])
+  roomTypeId   String        @db.ObjectId
+  bookedDate   DateTime[]    @default([])
+  status       RoomStatus    @default(AVAILABLE)
+  bookingInfos BookingInfo[]
+}
+
+model RoomType {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  typeName     String       @unique
+  capacity     String? // Example: "Up to 4 people"
+  size         Int
+  amenities    String[]     @default([])
+  occupancy    String
+  beds         String
+  bathrooms    String
+  introduction String // This one will be shown in the room card
+  description  String?
+  thumbnail    String
+  imageUrls    String[]     @default([])
+  price        Int
+  rooms        Room[]
+  // check kĩ khúc này và roomreview
+  roomReviews  RoomReview[]
+}
+
+model RoomReview {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  roomType   RoomType @relation(fields: [roomTypeId], references: [id])
+  roomTypeId String   @db.ObjectId
+  // check đây
+  customer   User     @relation(fields: [customerId], references: [id])
+  customerId String   @db.ObjectId
+  content    String?
+  star       Float
+  reviewDate DateTime @default(now())
+}
+
+model Service {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  serviceName    String          @unique
+  thumbnail      String
+  imageUrls      String[]        @default([])
+  introduction   String
+  description    String
+  price          Int
+  serviceReviews ServiceReview[]
+}
+
+model ServiceReview {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  service    Service  @relation(fields: [serviceId], references: [id])
+  serviceId  String   @db.ObjectId
+  customer   User     @relation(fields: [customerId], references: [id])
+  customerId String   @db.ObjectId
+  content    String?
+  star       Float
+  reviewDate DateTime @default(now())
+}
+
+model Booking {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  customer       User          @relation(fields: [customerId], references: [id])
+  customerId     String        @db.ObjectId
+  receptionist   Employee?     @relation(fields: [receptionistId], references: [id])
+  receptionistId String?       @db.ObjectId
+  bookingDate    DateTime      @default(now())
+  promotion      Promotion?    @relation(fields: [promotionId], references: [id])
+  promotionId    String?       @db.ObjectId
+  bookingStatus  Bookingtatus  @default(PROCESSING)
+  totalPrice     Int
+  bookingInfos   BookingInfo[]
+}
+
+model BookingInfo {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  bookingId String   @db.ObjectId
+  room      Room     @relation(fields: [roomId], references: [id])
+  roomId    String   @db.ObjectId
+  beginDate DateTime
+  endDate   DateTime
+}
+
+model Promotion {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  prmotionName  String
+  promotionCode String    @unique
+  description   String?
+  discount      Int
+  beginDate     DateTime
+  endDate       DateTime
+  bookings      Booking[]
+}
+
+// for mongo to create data type
+enum Role {
+  USER
+  ADMIN
+  RECEPTIONIST
+}
+
+enum RoomStatus {
+  AVAILABLE
+  PROCESSING
+  USED
+}
+
+enum Bookingtatus {
+  PROCESSING
+  CONFIRMED
+  CANCEL
 }
