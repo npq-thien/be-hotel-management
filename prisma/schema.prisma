@@ -31,7 +31,6 @@ model User {
   fullname       String
   email          String          @unique
   phone          String?
-  // for user
   roomReviews    RoomReview[]
   serviceReviews ServiceReview[]
   bookings       Booking[]
@@ -39,9 +38,7 @@ model User {
 
 model Room {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  // room id là gì ? VD single_1, double_2, deluxe_4....
   roomId       String        @unique
-  // nên để roomtypeId hay typeName vì typeName cũng unique
   roomType     RoomType      @relation(fields: [roomTypeId], references: [id])
   roomTypeId   String        @db.ObjectId
   bookedDate   DateTime[]    @default([])
@@ -64,7 +61,6 @@ model RoomType {
   imageUrls    String[]     @default([])
   price        Int
   rooms        Room[]
-  // check kĩ khúc này và roomreview
   roomReviews  RoomReview[]
 }
 
@@ -72,7 +68,6 @@ model RoomReview {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   roomType   RoomType @relation(fields: [roomTypeId], references: [id])
   roomTypeId String   @db.ObjectId
-  // check đây
   customer   User     @relation(fields: [customerId], references: [id])
   customerId String   @db.ObjectId
   content    String?
@@ -139,7 +134,7 @@ model Promotion {
 
 // for mongo to create data type
 enum Role {
-  USER
+  USER 
   ADMIN
   RECEPTIONIST
 }
