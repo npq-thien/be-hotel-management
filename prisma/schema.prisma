@@ -31,6 +31,7 @@ model User {
   fullname       String
   email          String          @unique
   phone          String?
+  token       String?
   roomReviews    RoomReview[]
   serviceReviews ServiceReview[]
   bookings       Booking[]
