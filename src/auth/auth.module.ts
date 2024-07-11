@@ -6,6 +6,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { SignUpHandler } from './handler/sign.up.handler';
 import { AuthService } from './auth.service';
 import { SignInHandler } from './handler/sign.in.handler';
+import { TokenStrategy } from './strategy/token.strategy';
 
 const handler = [SignUpHandler, SignInHandler];
 
@@ -18,7 +19,7 @@ const handler = [SignUpHandler, SignInHandler];
     }),
     CqrsModule,
   ],
-  providers: [...handler, AuthService],
+  providers: [...handler, AuthService, TokenStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

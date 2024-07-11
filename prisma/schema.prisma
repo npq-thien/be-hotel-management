@@ -20,6 +20,7 @@ model Employee {
   fullname             String
   email                String    @unique
   phone                String
+  token                String?
   role                 Role      @default(RECEPTIONIST)
   bookingConfirmations Booking[]
 }
@@ -31,7 +32,7 @@ model User {
   fullname       String
   email          String          @unique
   phone          String?
-  token       String?
+  token          String?
   roomReviews    RoomReview[]
   serviceReviews ServiceReview[]
   bookings       Booking[]
@@ -79,6 +80,7 @@ model RoomReview {
 model Service {
   id             String          @id @default(auto()) @map("_id") @db.ObjectId
   serviceName    String          @unique
+  title          String
   thumbnail      String
   imageUrls      String[]        @default([])
   introduction   String
