@@ -1,6 +1,6 @@
 import { Global, Injectable, Module } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-import { serviceAccount } from './firebase.config';
+import { serviceAccount } from 'firebase.config';
 
 @Injectable()
 export class FirebaseService {
