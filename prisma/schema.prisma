@@ -17,7 +17,7 @@ model Employee {
   id                   String    @id @default(auto()) @map("_id") @db.ObjectId
   username             String    @unique
   password             String
-  fullname             String
+  fullName             String
   email                String    @unique
   phone                String
   token                String?
@@ -29,7 +29,7 @@ model User {
   id             String          @id @default(auto()) @map("_id") @db.ObjectId
   username       String          @unique
   password       String
-  fullname       String
+  fullName       String
   email          String          @unique
   phone          String?
   token          String?

@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SignUpDTO } from './dto/sign.up.dto';
 import { SignUpCommand } from './handler/command/sign.up.command';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { SignInDTO } from './dto/sign.in.dto';
-import { SignInQuery } from './handler/query/sign.in.query';
+import { SignInCommand } from './handler/command/sign.in.command';
 
 @ApiTags('auth')
 // @ApiBearerAuth()
@@ -21,9 +21,9 @@ export class AuthController {
     return await this.commandBus.execute(command);
   }
 
-  @Get('signIn')
-  async signIn(@Query() q: SignInDTO) {
-    const query = new SignInQuery(q);
-    return await this.queryBus.execute(query);
+  @Post('signIn')
+  async signIn(@Body() body: SignInDTO) {
+    const query = new SignInCommand(body);
+    return await this.commandBus.execute(query);
   }
 }

@@ -1,7 +1,7 @@
 import { ICommand } from '@nestjs/cqrs';
 
 export class SignUpCommand implements ICommand {
-  fullname: string;
+  fullName: string;
   email: string;
   phone?: string;
   username: string;

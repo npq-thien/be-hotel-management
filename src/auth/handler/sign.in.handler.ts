@@ -1,14 +1,14 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { SignInQuery } from './query/sign.in.query';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { AuthService } from '../auth.service';
+import { SignInCommand } from './command/sign.in.command';
 
-@QueryHandler(SignInQuery)
-export class SignInHandler implements IQueryHandler<SignInQuery, any> {
+@CommandHandler(SignInCommand)
+export class SignInHandler implements ICommandHandler<SignInCommand, any> {
   @Inject()
   private readonly authService: AuthService;
 
-  async execute(query: SignInQuery): Promise<any> {
-    return await this.authService.signIn(query);
+  async execute(command: SignInCommand): Promise<any> {
+    return await this.authService.signIn(command);
   }
 }

@@ -2,12 +2,12 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from 'libs/database.module';
 import { SignUpCommand } from './handler/command/sign.up.command';
 import * as bcrypt from 'bcrypt';
-import { SignInQuery } from './handler/query/sign.in.query';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConfig } from './jwt.config';
 import { plainToClass } from 'class-transformer';
 import { SignInResult } from './result/sign.in.result';
 import { UtilityImplement } from 'libs/utility.module';
+import { SignInCommand } from './handler/command/sign.in.command';
 
 @Injectable()
 export class AuthService {
@@ -41,7 +41,7 @@ export class AuthService {
     await this.prisma.user.create({
       data: {
         id,
-        fullname: command.fullname,
+        fullName: command.fullName,
         email: command.email,
         phone: command.phone,
         username: command.username,
@@ -51,15 +51,19 @@ export class AuthService {
     return 'Register successfully';
   }
 
-  async signIn(query: SignInQuery) {
-    const user = await this.prisma.user.findUnique({
-      where: { username: query.username },
-      include: { bookings: true },
+  async signIn(command: SignInCommand) {
+    let user = await this.prisma.user.findUnique({
+      where: { username: command.username },
     });
     if (!user) {
-      throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+      user = await this.prisma.employee.findUnique({
+        where: { username: command.username },
+      });
+      if (!user) {
+        throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+      }
     }
-    const check = await bcrypt.compare(query.password, user.password);
+    const check = await bcrypt.compare(command.password, user.password);
     if (check === false) {
       throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST);
     }
@@ -70,7 +74,7 @@ export class AuthService {
     await this.prisma.user.update({ data: { token }, where: { id: user.id } });
     return plainToClass(
       SignInResult,
-      { token, username: user.username },
+      { token, username: user.fullName },
       {
         excludeExtraneousValues: true,
       },

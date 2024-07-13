@@ -1,9 +1,8 @@
-import { IQueryResult } from '@nestjs/cqrs';
 import { Expose } from 'class-transformer';
 
-export class SignInResult implements IQueryResult {
+export class SignInResult {
   @Expose()
   token: string;
   @Expose()
-  username: string;
+  fullName: string;
 }
