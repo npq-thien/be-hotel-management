@@ -29,19 +29,19 @@ export class RoomController {
     readonly queryBus: QueryBus,
   ) {}
 
-  @Get('')
+  @Get('/type')
   async getAll(@Query() q: GetAllRoomTypesDTO) {
     const query = new GetAllRoomTypesQuery(q);
     return await this.queryBus.execute(query);
   }
 
-  @Get('detail')
+  @Get('/type/detail')
   async getDetail(@Query() q: GetDetailRoomTypeDTO) {
     const query = new GetDetailRoomTypeQuery(q);
     return await this.queryBus.execute(query);
   }
 
-  @Post('create')
+  @Post('/type/create')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor('images'))
   async createRoomType(
@@ -52,13 +52,13 @@ export class RoomController {
     return await this.commandBus.execute(command);
   }
 
-  @Post('update')
+  @Post('/type/update')
   async updateRoomType(@Body() body: UpdateRoomTypeDTO) {
     const command = new UpdateRoomTypeCommand(body);
     return await this.commandBus.execute(command);
   }
 
-  @Post('delete')
+  @Post('/type/delete')
   async deleteRoomType(@Body() body: DeleteRoomTypeDTO) {
     const command = new DeleteRoomTypeCommand(body);
     return await this.commandBus.execute(command);

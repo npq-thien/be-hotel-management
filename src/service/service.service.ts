@@ -44,7 +44,7 @@ export class ServiceService {
           );
           return plainToClass(
             GetAllServicesItem,
-            { ...i, thumbnail, imageUrls },
+            { ...i },
             { excludeExtraneousValues: true },
           );
         }),
@@ -66,7 +66,7 @@ export class ServiceService {
     );
     return plainToClass(
       GetDetailServiceResult,
-      { ...data, thumbnail, imageUrls },
+      { ...data },
       { excludeExtraneousValues: true },
     );
   }

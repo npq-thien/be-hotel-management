@@ -44,7 +44,7 @@ export class RoomService {
           );
           return plainToClass(
             GetAllRoomTypesItem,
-            { ...i, thumbnail, imageUrls },
+            { ...i },
             {
               excludeExtraneousValues: true,
             },
@@ -70,7 +70,7 @@ export class RoomService {
     );
     return plainToClass(
       GetDetailRoomTypeResult,
-      { ...data, thumbnail, imageUrls },
+      { ...data },
       {
         excludeExtraneousValues: true,
       },
