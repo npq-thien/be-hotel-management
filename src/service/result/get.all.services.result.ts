@@ -7,6 +7,8 @@ export class GetAllServicesItem {
   @Expose()
   serviceName: string;
   @Expose()
+  title: string;
+  @Expose()
   thumbnail: string;
   @Expose()
   imageUrls: string[];
