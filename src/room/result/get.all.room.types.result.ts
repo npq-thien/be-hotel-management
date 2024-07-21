@@ -23,6 +23,8 @@ export class GetAllRoomTypesItem {
   @Expose()
   beds: string;
   @Expose()
+  bathrooms: string;
+  @Expose()
   price: number;
 }
 

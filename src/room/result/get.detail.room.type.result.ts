@@ -23,5 +23,7 @@ export class GetDetailRoomTypeResult implements IQueryResult {
   @Expose()
   beds: string;
   @Expose()
+  bathrooms: string;
+  @Expose()
   price: number;
 }
