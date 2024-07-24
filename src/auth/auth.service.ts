@@ -8,6 +8,7 @@ import { plainToClass } from 'class-transformer';
 import { SignInResult } from './result/sign.in.result';
 import { UtilityImplement } from 'libs/utility.module';
 import { SignInCommand } from './handler/command/sign.in.command';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -73,20 +74,23 @@ export class AuthService {
       { id: user.id, username: user.username },
       { secret: jwtConfig.access, expiresIn: jwtConfig.expiresIn.access },
     );
+    let role: string = '';
     if (employee) {
-      await this.prisma.employee.update({
+      const data = await this.prisma.employee.update({
         data: { token },
         where: { id: user.id },
       });
+      role = data.role;
     } else {
       await this.prisma.user.update({
         data: { token },
         where: { id: user.id },
       });
+      role = Role.USER;
     }
     return plainToClass(
       SignInResult,
-      { token, username: user.fullName },
+      { token, username: user.fullName, role },
       {
         excludeExtraneousValues: true,
       },
