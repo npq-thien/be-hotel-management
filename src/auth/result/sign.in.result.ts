@@ -5,4 +5,6 @@ export class SignInResult {
   token: string;
   @Expose()
   fullName: string;
+  @Expose()
+  role: string;
 }
