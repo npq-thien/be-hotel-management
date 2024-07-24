@@ -52,10 +52,12 @@ export class AuthService {
   }
 
   async signIn(command: SignInCommand) {
+    let employee = false;
     let user = await this.prisma.user.findUnique({
       where: { username: command.username },
     });
     if (!user) {
+      employee = true;
       user = await this.prisma.employee.findUnique({
         where: { username: command.username },
       });
@@ -71,7 +73,17 @@ export class AuthService {
       { id: user.id, username: user.username },
       { secret: jwtConfig.access, expiresIn: jwtConfig.expiresIn.access },
     );
-    await this.prisma.user.update({ data: { token }, where: { id: user.id } });
+    if (employee) {
+      await this.prisma.employee.update({
+        data: { token },
+        where: { id: user.id },
+      });
+    } else {
+      await this.prisma.user.update({
+        data: { token },
+        where: { id: user.id },
+      });
+    }
     return plainToClass(
       SignInResult,
       { token, username: user.fullName },
