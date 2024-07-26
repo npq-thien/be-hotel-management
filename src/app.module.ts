@@ -10,6 +10,7 @@ import { RoomModule } from './room/room.module';
 import { ServiceModule } from './service/service.module';
 import { FirebaseModule } from 'libs/firebase.module';
 import { TestModule } from './test/test.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TestModule } from './test/test.module';
     AuthModule,
     RoomModule,
     ServiceModule,
+    ProfileModule,
     TestModule,
   ],
   controllers: [AppController],
