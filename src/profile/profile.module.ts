@@ -9,7 +9,7 @@ import { DeleteProfileHandler } from './handler/delete.profile.handler';
 const handler = [
   GetDetailProfileHandler,
   UpdateProfileHandler,
-  DeleteProfileHandler
+  DeleteProfileHandler,
 ];
 
 @Module({

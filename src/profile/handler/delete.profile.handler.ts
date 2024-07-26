@@ -1,11 +1,9 @@
-import { ICommandHandler, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { GetDetailProfileQuery } from './query/get.detail.profile.query';
-import { GetDetailProfileResult } from '../result/get.detail.profile.result';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ProfileService } from '../profile.service';
 import { Inject } from '@nestjs/common';
 import { DeleteProfileCommand } from './command/delete.profile.command';
 
-@QueryHandler(DeleteProfileCommand)
+@CommandHandler(DeleteProfileCommand)
 export class DeleteProfileHandler
   implements ICommandHandler<DeleteProfileCommand, string>
 {

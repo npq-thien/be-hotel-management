@@ -6,6 +6,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'libs/getuser.decorator';
 import { UpdateProfileCommand } from './handler/command/update.profile.command';
 import { UpdateProfileDTO } from './dto/update.profile.dto';
+import { DeleteProfileCommand } from './handler/command/delete.profile.command';
 
 @ApiTags('profile')
 @Controller('profile')
@@ -29,6 +30,12 @@ export class ProfileController {
     @Body() body: UpdateProfileDTO,
   ) {
     const command = new UpdateProfileCommand({ ...body, id: user.id });
+    return await this.commandBus.execute(command);
+  }
+
+  @Post('/delete')
+  async deleteProfile(@GetUser() user: { id: string }) {
+    const command = new DeleteProfileCommand({ id: user.id });
     return await this.commandBus.execute(command);
   }
 }

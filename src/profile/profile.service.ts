@@ -47,6 +47,13 @@ export class ProfileService {
   }
 
   async deleteProfile(data: DeleteProfileCommand): Promise<string> {
-    return;
+    const item = await this.prisma.user.findUnique({ where: { id: data.id } });
+
+    if (item) {
+      await this.prisma.user.delete({ where: { id: item.id } });
+      return 'Deleted successfully';
+    } else {
+      throw new HttpException('Profile does not exist', HttpStatus.BAD_REQUEST);
+    }
   }
 }
