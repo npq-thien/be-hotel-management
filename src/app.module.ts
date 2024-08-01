@@ -11,6 +11,7 @@ import { ServiceModule } from './service/service.module';
 import { FirebaseModule } from 'libs/firebase.module';
 import { TestModule } from './test/test.module';
 import { ProfileModule } from './profile/profile.module';
+import { RoomReviewModule } from './roomReview/roomReview.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ProfileModule } from './profile/profile.module';
     RoomModule,
     ServiceModule,
     ProfileModule,
+    RoomReviewModule,
     TestModule,
   ],
   controllers: [AppController],
