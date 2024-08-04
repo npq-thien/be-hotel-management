@@ -36,14 +36,14 @@ export class RoomReviewService {
         where: { roomTypeId: query.roomTypeId },
       });
 
-      averageStar = aggregations._avg.star || 0;
+      averageStar = Math.round(aggregations._avg.star * 10) / 10 || 0;
 
       [data, total] = await Promise.all([
         this.prisma.roomReview.findMany({
           where: { roomTypeId: query.roomTypeId },
           include: { customer: true },
           orderBy: {
-            reviewDate: 'asc',
+            reviewDate: 'desc',
           },
         }),
 
@@ -73,15 +73,27 @@ export class RoomReviewService {
   }
 
   async createRoomRevivew(data: CreateRoomReviewCommand): Promise<string> {
-    const id = this.util.generateId();
-    await this.prisma.roomReview.create({
-      data: {
-        ...data,
-        id,
-      },
+    const isExist = await this.prisma.roomReview.findFirst({
+      where: { customerId: data.customerId },
     });
 
-    return 'Created successfully';
+    if (isExist) {
+      // return 'This user already reviewed this room!';
+      throw new HttpException(
+        'This user already reviewed this room!',
+        HttpStatus.BAD_REQUEST,
+      );
+    } else {
+      const id = this.util.generateId();
+      await this.prisma.roomReview.create({
+        data: {
+          ...data,
+          id,
+        },
+      });
+
+      return 'Created successfully';
+    }
   }
 
   async deleteRoomReview(data: DeleteRoomReviewCommand): Promise<string> {
