@@ -15,14 +15,54 @@ export class TestService {
     // User / Employee
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash('123456', salt);
-    await Promise.all([
+    const userIds = await Promise.all([
       this.prisma.user.create({
         data: {
           id: this.util.generateId(),
-          username: 'user',
+          username: 'user1',
           password: hashPassword,
           fullName: 'Nguyen Van A',
           email: 'a@gmail.com',
+          phone: '0111122222',
+        },
+      }),
+      this.prisma.user.create({
+        data: {
+          id: this.util.generateId(),
+          username: 'test1',
+          password: hashPassword,
+          fullName: 'Tester 1 Is Here',
+          email: 'test1@gmail.com',
+          phone: '0123456789',
+        },
+      }),
+      this.prisma.user.create({
+        data: {
+          id: this.util.generateId(),
+          username: 'test2',
+          password: hashPassword,
+          fullName: 'Alice Johnathan',
+          email: 'johnathan@gmail.com',
+          phone: '0111122222',
+        },
+      }),
+      this.prisma.user.create({
+        data: {
+          id: this.util.generateId(),
+          username: 'test3',
+          password: hashPassword,
+          fullName: 'Denice Key',
+          email: 'deniceKey@gmail.com',
+          phone: '0111122222',
+        },
+      }),
+      this.prisma.user.create({
+        data: {
+          id: this.util.generateId(),
+          username: 'test4',
+          password: hashPassword,
+          fullName: 'Alice in Wonderland',
+          email: 'wonderalice@gmail.com',
           phone: '0111122222',
         },
       }),
@@ -186,9 +226,9 @@ export class TestService {
           'Tea and coffee maker',
         ],
         introduction:
-          'Indulge in the ultimate luxury with our spacious Suite, designed for those who appreciate the finer things in life. With panoramic views and sophisticated decor, our Suite offers an unparalleled experience of comfort and style.',
+          'Indulge in the ultimate luxury with our spacious Suite, designed for those who appreciate the finer things in life. With panoramic views and sophisticated decor, our Suite offers an unparalleled experience of comfort and elegance.',
         description,
-        size: 80,
+        size: 52,
         occupancy: 'Up to 6 people',
         beds: 'Three king beds',
         bathrooms: 'Rain shower, separate marble tub, hairdryer',
@@ -292,5 +332,105 @@ export class TestService {
     for (const service of dataServices) {
       await this.prisma.service.create({ data: service });
     }
+
+    //------------------------------------------------
+    // Room Review
+    const roomReviewData = [
+      {
+        id: this.util.generateId(),
+        roomTypeId: await this.getRoomIdByType('Single bedroom'),
+        customerId: userIds[0].id,
+        content: 'Great experience, very cozy!',
+        star: 5,
+        reviewDate: '2024-01-10T00:00:00.000Z',
+      },
+      {
+        id: this.util.generateId(),
+        roomTypeId: await this.getRoomIdByType('Single bedroom'),
+        customerId: userIds[1].id,
+        content: 'Comfortable and clean, will come back again.',
+        star: 4,
+        reviewDate: '2024-02-15T00:00:00.000Z',
+      },
+      {
+        id: this.util.generateId(),
+        roomTypeId: await this.getRoomIdByType('Deluxe room'),
+        customerId: userIds[2].id,
+        content: 'Luxurious and worth every penny!',
+        star: 5,
+        reviewDate: '2024-03-20T00:00:00.000Z',
+      },
+      {
+        id: this.util.generateId(),
+        roomTypeId: await this.getRoomIdByType('Deluxe room'),
+        customerId: userIds[3].id,
+        content: 'Amazing stay, excellent service!',
+        star: 5,
+        reviewDate: '2024-04-25T00:00:00.000Z',
+      },
+      {
+        id: this.util.generateId(),
+        roomTypeId: await this.getRoomIdByType('Family room'),
+        customerId: userIds[3].id,
+        content: 'Perfect for our family vacation, kids loved it.',
+        star: 4,
+        reviewDate: '2024-05-05T00:00:00.000Z',
+      },
+      {
+        id: this.util.generateId(),
+        roomTypeId: await this.getRoomIdByType('Family room'),
+        customerId: userIds[4].id,
+        content: 'Spacious and comfortable, great for families.',
+        star: 5,
+        reviewDate: '2024-06-15T00:00:00.000Z',
+      },
+      {
+        id: this.util.generateId(),
+        roomTypeId: await this.getRoomIdByType('Suite'),
+        customerId: userIds[4].id,
+        content: 'Incredible view and top-notch amenities.',
+        star: 5,
+        reviewDate: '2024-07-10T00:00:00.000Z',
+      },
+      {
+        id: this.util.generateId(),
+        roomTypeId: await this.getRoomIdByType('Suite'),
+        customerId: userIds[2].id,
+        content: 'Best stay ever, highly recommended.',
+        star: 5,
+        reviewDate: '2024-08-01T00:00:00.000Z',
+      },
+      {
+        id: this.util.generateId(),
+        roomTypeId: await this.getRoomIdByType('Penthouse'),
+        customerId: userIds[0].id,
+        content: 'Unparalleled luxury, an unforgettable experience.',
+        star: 5,
+        reviewDate: '2024-08-15T00:00:00.000Z',
+      },
+      {
+        id: this.util.generateId(),
+        roomTypeId: await this.getRoomIdByType('Penthouse'),
+        customerId: userIds[1].id,
+        content: 'Expensive but worth it for the luxury.',
+        star: 4,
+        reviewDate: '2024-09-01T00:00:00.000Z',
+      },
+    ];
+
+    for (const review of roomReviewData) {
+      await this.prisma.roomReview.create({ data: review });
+    }
+
+    for (const review of roomReviewData) {
+      await this.prisma.roomReview.create({ data: review });
+    }
+  }
+
+  private async getRoomIdByType(typeName: string): Promise<string> {
+    const roomType = await this.prisma.roomType.findFirst({
+      where: { typeName },
+    });
+    return roomType.id;
   }
 }
